@@ -1,0 +1,23 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import CampaignsManager from "../../components/CampaignsManager";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+let loreEntries: CollectionEntry<"lore">[] = [];
+try {
+  loreEntries = await getCollection("lore");
+} catch {
+  loreEntries = [];
+}
+const loreLinks = loreEntries.map((entry: CollectionEntry<"lore">) => ({
+  slug: entry.id,
+  title: entry.data.title,
+}));
+---
+
+<BaseLayout title="Campañas | Crónicas de Aetheria" loreLinks={loreLinks}>
+  <section class="parchment-panel p-6">
+    <CampaignsManager client:load />
+  </section>
+</BaseLayout>

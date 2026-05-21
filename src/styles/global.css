@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: "Crimson Text", Georgia, serif;
+  font-size: 1.0625rem;
+}
+
+/* ── Atmospheric background ─────────────────── */
+.app-bg {
+  background:
+    radial-gradient(90rem 35rem at 85% -5%,  rgb(88 28 135 / 35%), transparent 65%),
+    radial-gradient(70rem 30rem at 0%  105%, rgb(13 148 136 / 25%), transparent 60%),
+    radial-gradient(50rem 20rem at 50% 50%,  rgb(30 27 75 / 40%),  transparent 70%),
+    linear-gradient(175deg, #05070f 0%, #080d1a 50%, #060c18 100%);
+  min-height: 100vh;
+}
+
+/* ── Parchment card ─────────────────────────── */
+.parchment-panel {
+  position: relative;
+  background:
+    linear-gradient(145deg, rgb(22 28 43 / 96%), rgb(17 23 37 / 94%)),
+    repeating-linear-gradient(
+      48deg,
+      rgb(255 255 255 / 1.5%) 0,
+      rgb(255 255 255 / 1.5%) 1px,
+      transparent 1px,
+      transparent 5px
+    );
+  border: 1px solid rgb(55 70 105 / 70%);
+  border-radius: 0.875rem;
+  box-shadow:
+    0 20px 60px rgb(0 0 0 / 45%),
+    0  4px 16px rgb(0 0 0 / 30%),
+    inset 0 0 0 1px rgb(139 92 246 / 8%),
+    inset 0 1px 0 rgb(255 255 255 / 4%);
+}
+
+.parchment-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    to bottom right,
+    rgb(139 92 246 / 4%) 0%,
+    transparent 50%,
+    rgb(20 184 166 / 3%) 100%
+  );
+  pointer-events: none;
+}
+
+/* ── Scrollbar ──────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #050810; }
+::-webkit-scrollbar-thumb { background: rgb(88 28 135 / 60%); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgb(139 92 246 / 70%); }
+
+/* ── Separator ornament ─────────────────────── */
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgb(139 92 246 / 50%);
+}
+.ornament-divider::before,
+.ornament-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgb(139 92 246 / 40%), transparent);
+}
+
+/* ── Animations ─────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fadein {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* ── Reusable UI tokens ────────────────────── */
+.ui-card {
+  border-radius: 0.75rem;
+  border: 1px solid rgb(71 85 105 / 65%);
+  background: rgb(15 23 42 / 55%);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.ui-card:hover {
+  border-color: rgb(45 212 191 / 40%);
+  background: rgb(30 41 59 / 55%);
+}
+
+.ui-input,
+.ui-textarea,
+.ui-select {
+  width: 100%;
+  border-radius: 0.65rem;
+  border: 1px solid rgb(71 85 105 / 65%);
+  background: rgb(2 6 23 / 60%);
+  padding: 0.75rem 1rem;
+  color: rgb(226 232 240);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ui-input:focus,
+.ui-textarea:focus,
+.ui-select:focus {
+  border-color: rgb(45 212 191 / 60%);
+  box-shadow: 0 0 0 1px rgb(45 212 191 / 30%);
+}
+
+.ui-btn {
+  border-radius: 0.6rem;
+  border: 1px solid rgb(45 212 191 / 40%);
+  background: rgb(15 118 110 / 30%);
+  padding: 0.55rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgb(153 246 228);
+  transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.ui-btn:hover {
+  border-color: rgb(45 212 191 / 60%);
+  background: rgb(15 118 110 / 45%);
+}
+
+.ui-btn-secondary {
+  border-color: rgb(139 92 246 / 45%);
+  background: rgb(88 28 135 / 25%);
+  color: rgb(221 214 254);
+}
+
+.ui-btn-secondary:hover {
+  border-color: rgb(168 85 247 / 60%);
+  background: rgb(88 28 135 / 38%);
+}
+
+.ui-btn-danger {
+  border-color: rgb(244 63 94 / 45%);
+  background: rgb(159 18 57 / 25%);
+  color: rgb(254 205 211);
+}
+
+.ui-btn-danger:hover {
+  border-color: rgb(251 113 133 / 65%);
+  background: rgb(159 18 57 / 38%);
+}
+
+.ui-btn:disabled,
+.ui-btn-secondary:disabled,
+.ui-btn-danger:disabled {
+  opacity: 0.6;
+}

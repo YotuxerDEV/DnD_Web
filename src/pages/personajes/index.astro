@@ -1,0 +1,21 @@
+---
+import PersonajesManager from "../../components/PersonajesManager";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+let loreEntries: CollectionEntry<"lore">[] = [];
+try {
+  loreEntries = await getCollection("lore");
+} catch {
+  loreEntries = [];
+}
+const loreLinks = loreEntries.map((entry: CollectionEntry<"lore">) => ({
+  slug: entry.id,
+  title: entry.data.title,
+}));
+---
+
+<BaseLayout title="Personajes | Crónicas de Aetheria" loreLinks={loreLinks}>
+  <PersonajesManager client:load />
+</BaseLayout>

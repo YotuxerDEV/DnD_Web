@@ -1,0 +1,47 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  let entries: CollectionEntry<"lore">[] = [];
+  try {
+    entries = await getCollection("lore");
+  } catch {
+    entries = [];
+  }
+  return entries.map((entry: CollectionEntry<"lore">) => ({
+    params: { slug: entry.id },
+  }));
+}
+
+let allLore: CollectionEntry<"lore">[] = [];
+try {
+  allLore = await getCollection("lore");
+} catch {
+  allLore = [];
+}
+const loreLinks = allLore.map((entry: CollectionEntry<"lore">) => ({
+  slug: entry.id,
+  title: entry.data.title,
+}));
+
+const { slug } = Astro.params;
+const entry = await getEntry("lore", slug!);
+if (!entry) return Astro.redirect("/lore/");
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={`Lore | ${entry.data.title}`} loreLinks={loreLinks}>
+  <article class="parchment-panel p-6">
+    <header class="border-b border-slate-700/50 pb-4">
+      <p class="text-xs uppercase tracking-wider text-teal-300/80">{entry.data.region}</p>
+      <h1 class="mt-1 font-serif text-4xl text-purple-200">{entry.data.title}</h1>
+      <p class="mt-3 text-slate-300">{entry.data.summary}</p>
+    </header>
+
+    <div class="prose prose-invert mt-6 max-w-none prose-headings:font-serif prose-a:text-teal-300">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

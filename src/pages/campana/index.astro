@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import CampaignHub from "../../components/CampaignHub";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+let loreEntries: CollectionEntry<"lore">[] = [];
+try {
+  loreEntries = await getCollection("lore");
+} catch {
+  loreEntries = [];
+}
+const loreLinks = loreEntries.map((entry: CollectionEntry<"lore">) => ({
+  slug: entry.id,
+  title: entry.data.title,
+}));
+---
+
+<BaseLayout title="Campaña | Crónicas de Aetheria" loreLinks={loreLinks}>
+  <CampaignHub client:load />
+</BaseLayout>

@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+
+# Environment – NUNCA subas credenciales reales
+.env
+# Sí se puede versionar el ejemplo sin valores reales
+!.env.example
+
+# Editor
+.vscode/
+*.suo
+*.user
