@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import CampaignDashboard from "./CampaignDashboard";
+import CampaignEconomyManager from "./CampaignEconomyManager";
 import LoreManager from "./LoreManager";
 import PersonajesManager from "./PersonajesManager";
 
@@ -171,6 +173,8 @@ export default function CampaignHub() {
         <p className="mt-2 max-w-3xl text-slate-300">{campaign.summary || "Sin resumen todavía."}</p>
       </div>
 
+      <CampaignDashboard campaignId={campaign.id} campaignName={campaign.name} />
+
       <div className="grid gap-6 xl:grid-cols-2">
         <div className="parchment-panel p-6">
           <LoreManager campaignId={campaign.id} campaignName={campaign.name} />
@@ -179,6 +183,8 @@ export default function CampaignHub() {
           <PersonajesManager campaignId={campaign.id} campaignName={campaign.name} />
         </div>
       </div>
+
+      <CampaignEconomyManager campaignId={campaign.id} />
     </section>
   );
 }

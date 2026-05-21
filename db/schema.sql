@@ -28,6 +28,7 @@ create table if not exists public.personajes (
   journal_entries jsonb not null default '[]'::jsonb,
   skill_proficiencies jsonb not null default '[]'::jsonb,
   inventory_items jsonb not null default '[]'::jsonb,
+  gold int not null default 0,
   spell_slots jsonb not null default '{"1":{"max":0,"used":0},"2":{"max":0,"used":0},"3":{"max":0,"used":0},"4":{"max":0,"used":0},"5":{"max":0,"used":0},"6":{"max":0,"used":0},"7":{"max":0,"used":0},"8":{"max":0,"used":0},"9":{"max":0,"used":0}}'::jsonb,
   spells_by_level jsonb not null default '{"0":[],"1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[],"9":[]}'::jsonb,
   class_resources jsonb not null default '[]'::jsonb,
@@ -50,6 +51,9 @@ alter table public.personajes
 
 alter table public.personajes
   add column if not exists inventory_items jsonb not null default '[]'::jsonb;
+
+alter table public.personajes
+  add column if not exists gold int not null default 0;
 
 alter table public.personajes
   add column if not exists spell_slots jsonb not null default '{"1":{"max":0,"used":0},"2":{"max":0,"used":0},"3":{"max":0,"used":0},"4":{"max":0,"used":0},"5":{"max":0,"used":0},"6":{"max":0,"used":0},"7":{"max":0,"used":0},"8":{"max":0,"used":0},"9":{"max":0,"used":0}}'::jsonb;
@@ -143,6 +147,32 @@ begin
   ) then
     create policy "Allow all lore_entries"
       on public.lore_entries
+      for all
+      using (true)
+      with check (true);
+  end if;
+end $$;
+
+create table if not exists public.campaign_treasury (
+  campaign_id uuid primary key references public.campaigns(id) on delete cascade,
+  gold int not null default 0,
+  items jsonb not null default '[]'::jsonb,
+  updated_at timestamptz default now()
+);
+
+alter table public.campaign_treasury enable row level security;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'campaign_treasury'
+      and policyname = 'Allow all campaign_treasury'
+  ) then
+    create policy "Allow all campaign_treasury"
+      on public.campaign_treasury
       for all
       using (true)
       with check (true);

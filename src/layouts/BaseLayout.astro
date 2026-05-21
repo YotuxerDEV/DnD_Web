@@ -29,6 +29,8 @@ const currentPath = Astro.url.pathname;
     />
   </head>
   <body class="app-bg text-slate-200">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
     <!-- Header -->
     <header class="sticky top-0 z-40 border-b border-purple-900/30 bg-slate-950/85 backdrop-blur-md">
       <nav class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3">
@@ -143,7 +145,7 @@ const currentPath = Astro.url.pathname;
       </aside>
 
       <!-- Main content -->
-      <main class="min-w-0 space-y-6">
+      <main id="main-content" class="min-w-0 space-y-6" tabindex="-1">
         <slot />
       </main>
     </div>

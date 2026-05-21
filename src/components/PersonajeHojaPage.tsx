@@ -82,6 +82,7 @@ type CharacterSheet = {
   journalEntries: JournalEntry[];
   skillProficiencies: SkillKey[];
   inventoryItems: InventoryItem[];
+  gold: number;
   spellSlots: SpellSlotsByLevel;
   spellsByLevel: SpellsByLevel;
   actionFeatures: ActionFeatures;
@@ -271,6 +272,7 @@ function mapRow(row: Record<string, unknown>): CharacterSheet {
     journalEntries,
     skillProficiencies,
     inventoryItems,
+    gold: Math.max(0, Number(row.gold ?? 0)),
     spellSlots,
     spellsByLevel,
     actionFeatures,

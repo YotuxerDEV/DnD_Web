@@ -11,6 +11,28 @@ body {
   font-size: 1.0625rem;
 }
 
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 1000;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(45 212 191 / 70%);
+  background: rgb(15 23 42 / 96%);
+  padding: 0.5rem 0.8rem;
+  color: rgb(209 250 229);
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(45 212 191 / 85%);
+  outline-offset: 2px;
+}
+
 /* ── Atmospheric background ─────────────────── */
 .app-bg {
   background:
@@ -161,4 +183,15 @@ body {
 .ui-btn-secondary:disabled,
 .ui-btn-danger:disabled {
   opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

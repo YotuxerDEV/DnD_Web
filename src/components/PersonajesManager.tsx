@@ -48,6 +48,7 @@ type CharacterSheet = {
   historyBlog: string;
   skillProficiencies: string[];
   inventoryItems: Array<{ id: string; name: string; qty: number; weight: number; notes: string }>;
+  gold: number;
   spellSlots: Record<string, { max: number; used: number }>;
   spellsByLevel: Record<string, SpellCard[]>;
   actionFeatures: { actions: string[]; bonusActions: string[]; reactions: string[] };
@@ -148,15 +149,72 @@ function getAbilityMod(score: number): number {
   return Math.floor((score - 10) / 2);
 }
 
+function getFinalAbilityScore(
+  pj: CharacterSheet,
+  ability: AbilityKey,
+): number {
+  const raceBonus =
+    RAZAS[pj.raceKey as keyof typeof RAZAS]?.statBonuses?.[ability] ?? 0;
+  return (pj.abilities[ability] ?? 10) + raceBonus;
+}
+
 function getArmorClass(pj: CharacterSheet): number {
-  const dexMod = getAbilityMod(pj.abilities.dex ?? 10);
+  // Brynja usa su propia defensa natural: 12 + modificador de CON.
+  if (pj.raceKey === "brynja") {
+    const conMod = getAbilityMod(getFinalAbilityScore(pj, "con"));
+    return Math.max(1, 12 + conMod + (pj.armor.bonus ?? 0));
+  }
+
+  const dexMod = getAbilityMod(getFinalAbilityScore(pj, "dex"));
   const dexContribution =
     pj.armor.maxDexMod === null ? dexMod : Math.min(dexMod, pj.armor.maxDexMod);
   return Math.max(1, pj.armor.baseAc + dexContribution + pj.armor.bonus);
 }
 
-function getProficiencyBonus(level: number): number {
-  return 2 + Math.floor((Math.max(1, level) - 1) / 4);
+function getInitiative(pj: CharacterSheet): number {
+  return Math.max(0, getAbilityMod(pj.abilities.dex ?? 10));
+}
+
+type MovementProfile = {
+  walk: number;
+  swim?: number;
+  fly?: number;
+};
+
+function getMovementProfile(raceKey: string): MovementProfile {
+  const race = RAZAS[raceKey as keyof typeof RAZAS];
+
+  const explicitByRace: Record<string, MovementProfile> = {
+    elfo_bosque: { walk: 35 },
+    escualo_martillo: { walk: 30, swim: 40 },
+    escualo_tigre: { walk: 30, swim: 40 },
+    escualo_toro: { walk: 30, swim: 40 },
+    fiskanir_ballenido: { walk: 25, swim: 40 },
+    fiskanir_orka: { walk: 30, swim: 40 },
+    sporr_colosus: { walk: 25 },
+  };
+
+  const baseWalk = raceKey.startsWith("enano") || raceKey.startsWith("halfling") || raceKey.startsWith("gnomo")
+    ? 25
+    : 30;
+
+  const explicit = explicitByRace[raceKey];
+  if (explicit) {
+    return explicit;
+  }
+
+  const traitText = (race?.traits ?? [])
+    .map((trait) => `${trait.name} ${trait.description}`.toLowerCase())
+    .join(" ");
+
+  const hasSwim = /habitante del mar|nadar|acuatic|anfibi|swim/.test(traitText);
+  const hasFly = /volar|vuelo|alas|fly/.test(traitText);
+
+  return {
+    walk: baseWalk,
+    ...(hasSwim ? { swim: baseWalk } : {}),
+    ...(hasFly ? { fly: baseWalk } : {}),
+  };
 }
 
 function getDefaultSpellRecord(): Record<string, SpellCard[]> {
@@ -251,6 +309,7 @@ function mapRow(row: Record<string, unknown>): CharacterSheet {
     inventoryItems: Array.isArray(row.inventory_items)
       ? (row.inventory_items as Array<{ id: string; name: string; qty: number; weight: number; notes: string }>)
       : [],
+    gold: Math.max(0, Number(row.gold ?? 0)),
     spellSlots:
       row.spell_slots && typeof row.spell_slots === "object"
         ? (row.spell_slots as Record<string, { max: number; used: number }>)
@@ -504,6 +563,7 @@ export default function PersonajesManager({ campaignId, campaignName }: Personaj
       journal_entries: [],
       skill_proficiencies: [],
       inventory_items: [],
+      gold: 0,
       spell_slots: {
         "1": { max: 0, used: 0 },
         "2": { max: 0, used: 0 },
@@ -673,7 +733,7 @@ export default function PersonajesManager({ campaignId, campaignName }: Personaj
                   Raza <span className="text-slate-100">{RAZAS[pj.raceKey as keyof typeof RAZAS]?.name ?? pj.raceKey}</span>
                 </p>
 
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-4 gap-2">
                   <div className="rounded-md border border-slate-700/70 bg-slate-950/45 px-2 py-2 text-center">
                     <p className="text-[11px] uppercase tracking-wide text-slate-400">HP</p>
                     <p className="text-lg font-semibold text-cyan-100">{pj.currentHp}</p>
@@ -683,8 +743,27 @@ export default function PersonajesManager({ campaignId, campaignName }: Personaj
                     <p className="text-lg font-semibold text-emerald-100">{getArmorClass(pj)}</p>
                   </div>
                   <div className="rounded-md border border-slate-700/70 bg-slate-950/45 px-2 py-2 text-center">
-                    <p className="text-[11px] uppercase tracking-wide text-slate-400">COMP</p>
-                    <p className="text-lg font-semibold text-purple-100">+{getProficiencyBonus(pj.level)}</p>
+                    <p className="text-[11px] uppercase tracking-wide text-slate-400">INIT</p>
+                    <p className="text-lg font-semibold text-purple-100">
+                      {getInitiative(pj) >= 0 ? `+${getInitiative(pj)}` : getInitiative(pj)}
+                    </p>
+                  </div>
+                  <div className="rounded-md border border-slate-700/70 bg-slate-950/45 px-2 py-2 text-center">
+                    <p className="text-[11px] uppercase tracking-wide text-slate-400">VEL</p>
+                    {(() => {
+                      const movement = getMovementProfile(pj.raceKey);
+                      return (
+                        <div className="leading-tight">
+                          <p className="text-sm font-semibold text-amber-100">T {movement.walk} ft</p>
+                          {movement.swim && (
+                            <p className="text-[11px] text-cyan-200">N {movement.swim} ft</p>
+                          )}
+                          {movement.fly && (
+                            <p className="text-[11px] text-sky-200">V {movement.fly} ft</p>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
 

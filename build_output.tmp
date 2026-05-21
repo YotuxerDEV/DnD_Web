@@ -1,0 +1,59 @@
+
+> dnd-web-app@0.0.1 build
+> astro build
+
+12:29:25 [content] Syncing content
+12:29:25 [WARN] [glob-loader] No files found matching "**/*.{md,mdx}" in directory "src/content/lore"
+12:29:25 [content] Synced content
+12:29:25 [types] Generated 2.40s
+12:29:25 [build] output: "static"
+12:29:25 [build] mode: "static"
+12:29:25 [build] directory: /mnt/c/Users/javie/Documents/YotuxerDEV/DnD_Web/dist/
+12:29:25 [build] Collecting build info...
+12:29:25 [build] ✓ Completed in 2.83s.
+12:29:25 [build] Building static entrypoints...
+12:29:29 [vite] ✓ built in 3.61s
+12:29:29 [build] ✓ Completed in 3.67s.
+
+ building client (vite) 
+12:29:29 [vite] transforming...
+12:29:30 [vite] ✓ 83 modules transformed.
+12:29:30 [vite] rendering chunks...
+12:29:30 [vite] computing gzip size...
+12:29:30 [vite] dist/_astro/HomeCampaignsList.Bg8Lpv55.js    1.89 kB │ gzip:  0.89 kB
+12:29:30 [vite] dist/_astro/CampaignsManager.C3tTQxuB.js     6.51 kB │ gzip:  2.14 kB
+12:29:30 [vite] dist/_astro/index.DK-fsZOb.js                6.81 kB │ gzip:  2.73 kB
+12:29:30 [vite] dist/_astro/LoreManager.BDSRjYky.js          8.42 kB │ gzip:  2.63 kB
+12:29:30 [vite] dist/_astro/CampaignHub.D2686ngd.js         12.20 kB │ gzip:  3.59 kB
+12:29:30 [vite] dist/_astro/races.AHcKdXwM.js               18.69 kB │ gzip:  5.24 kB
+12:29:30 [vite] dist/_astro/PersonajesManager.o7IcjRkM.js   18.69 kB │ gzip:  5.73 kB
+12:29:30 [vite] dist/_astro/PersonajeHojaPage.Bz8rOX3y.js   55.97 kB │ gzip: 12.81 kB
+12:29:30 [vite] dist/_astro/client.Bz692-Ao.js             136.51 kB │ gzip: 44.01 kB
+12:29:30 [vite] dist/_astro/supabase.TIy9Cg3G.js           205.84 kB │ gzip: 53.97 kB
+12:29:30 [vite] ✓ built in 1.32s
+
+ generating static routes 
+12:29:31 ▶ src/pages/campana/index.astro
+12:29:31   └─ /campana/index.htmlThe collection "lore" does not exist or is empty. Please check your content config file for errors.
+ (+19ms) 
+12:29:31 ▶ src/pages/campanas/index.astro
+12:29:31   └─ /campanas/index.htmlThe collection "lore" does not exist or is empty. Please check your content config file for errors.
+ (+5ms) 
+12:29:31 ▶ src/pages/lore/[slug].astro
+The collection "lore" does not exist or is empty. Please check your content config file for errors.
+12:29:31 ▶ src/pages/lore/index.astro
+12:29:31   └─ /lore/index.htmlThe collection "lore" does not exist or is empty. Please check your content config file for errors.
+ (+6ms) 
+12:29:31 ▶ src/pages/personajes/hoja.astro
+12:29:31   └─ /personajes/hoja/index.htmlThe collection "lore" does not exist or is empty. Please check your content config file for errors.
+ (+8ms) 
+12:29:31 ▶ src/pages/personajes/index.astro
+12:29:31   └─ /personajes/index.htmlThe collection "lore" does not exist or is empty. Please check your content config file for errors.
+ (+6ms) 
+12:29:31 ▶ src/pages/index.astro
+12:29:31   └─ /index.htmlThe collection "lore" does not exist or is empty. Please check your content config file for errors.
+ (+4ms) 
+12:29:31 ✓ Completed in 869ms.
+
+12:29:31 [build] 6 page(s) built in 8.82s
+12:29:31 [build] Complete!

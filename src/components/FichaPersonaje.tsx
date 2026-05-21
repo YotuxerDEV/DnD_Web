@@ -100,6 +100,7 @@ type CharacterSheet = {
   journalEntries: JournalEntry[];
   skillProficiencies: SkillKey[];
   inventoryItems: InventoryItem[];
+  gold: number;
   spellSlots: SpellSlotsByLevel;
   spellsByLevel: SpellsByLevel;
   actionFeatures: ActionFeatures;
@@ -360,6 +361,7 @@ function mapDbToCharacter(row: Record<string, unknown>): CharacterSheet {
     journalEntries,
     skillProficiencies,
     inventoryItems,
+    gold: Math.max(0, Number(row.gold ?? 0)),
     spellSlots,
     spellsByLevel,
     actionFeatures,
@@ -424,6 +426,7 @@ export default function FichaPersonaje({
     journalEntries: initialCharacter.journalEntries ?? [],
     skillProficiencies: initialCharacter.skillProficiencies ?? [],
     inventoryItems: initialCharacter.inventoryItems ?? [],
+    gold: initialCharacter.gold ?? 0,
     spellSlots: initialCharacter.spellSlots ?? getDefaultSpellSlots(),
     spellsByLevel: initialCharacter.spellsByLevel ?? getDefaultSpellsByLevel(),
     actionFeatures: initialCharacter.actionFeatures ?? {
@@ -617,6 +620,7 @@ export default function FichaPersonaje({
       journal_entries: nextCharacter.journalEntries,
       skill_proficiencies: nextCharacter.skillProficiencies,
       inventory_items: nextCharacter.inventoryItems,
+      gold: nextCharacter.gold,
       spell_slots: nextCharacter.spellSlots,
       spells_by_level: nextCharacter.spellsByLevel,
       class_resources: nextCharacter.classResources,
@@ -1948,6 +1952,24 @@ export default function FichaPersonaje({
       {tab === "inventario" && (
         <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[340px_1fr]">
           <section className="rounded-md border border-slate-700/60 bg-slate-900/40 p-4">
+            <h3 className="text-lg font-semibold text-amber-100">Monedas</h3>
+            <div className="mt-2">
+              <label className="text-sm text-slate-300">Oro del personaje (PO)</label>
+              <input
+                className="mt-1 w-full rounded-md border border-slate-700/60 bg-slate-950/60 px-3 py-2 text-slate-100"
+                min={0}
+                onChange={(event) =>
+                  setCharacter((prev) => ({
+                    ...prev,
+                    gold: Math.max(0, Number(event.target.value || 0)),
+                  }))
+                }
+                type="number"
+                value={character.gold}
+              />
+              <p className="mt-1 text-xs text-slate-500">Se guarda al pulsar "Guardar Inventario".</p>
+            </div>
+
             <h3 className="text-lg font-semibold text-teal-100">Nuevo objeto</h3>
             <div className="mt-3 space-y-2">
               <input
@@ -1996,6 +2018,7 @@ export default function FichaPersonaje({
               <h3 className="text-lg font-semibold text-teal-100">Equipo cargado</h3>
               <p className="text-sm text-slate-300">Peso total: {totalInventoryWeight.toFixed(1)}</p>
             </div>
+            <p className="mb-3 text-sm text-amber-100">Oro actual: {character.gold} PO</p>
             <div className="space-y-2">
               {character.inventoryItems.length === 0 && (
                 <p className="text-sm text-slate-400">Sin objetos cargados.</p>

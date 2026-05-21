@@ -78,7 +78,20 @@ export function getDefaultClassResources(clase: string, level: number): ClassRes
         ...(lvl >= 2
           ? [createResource("fighter-action-surge", "Action Surge", lvl >= 17 ? 2 : 1, "short_rest")]
           : []),
+        ...(lvl >= 9
+          ? [
+              createResource(
+                "fighter-indomitable",
+                "Indomitable",
+                lvl >= 17 ? 3 : lvl >= 13 ? 2 : 1,
+                "long_rest",
+              ),
+            ]
+          : []),
       ];
+
+    case "bard":
+      return [createResource("bard-inspiration", "Inspiracion bardica", lvl >= 5 ? 4 : 3, lvl >= 5 ? "short_rest" : "long_rest")];
 
     case "paladin":
       return [
@@ -105,6 +118,16 @@ export function getDefaultClassResources(clase: string, level: number): ClassRes
         ? [createResource("druid-wild-shape", "Wild Shape", 2, "short_rest")]
         : [];
 
+    case "ranger":
+      return lvl >= 1
+        ? [createResource("ranger-favored-foe", "Favored Foe", lvl >= 6 ? 4 : lvl >= 2 ? 3 : 2, "long_rest")]
+        : [];
+
+    case "rogue":
+      return lvl >= 20
+        ? [createResource("rogue-stroke-of-luck", "Stroke of Luck", 1, "short_rest")]
+        : [];
+
     case "monk":
       return lvl >= 2
         ? [createResource("monk-ki", "Ki", lvl, "short_rest")]
@@ -114,6 +137,16 @@ export function getDefaultClassResources(clase: string, level: number): ClassRes
       return lvl >= 2
         ? [createResource("sorcerer-sorcery-points", "Sorcery Points", lvl, "long_rest")]
         : [];
+
+    case "warlock":
+      return [
+        createResource(
+          "warlock-pact-slots",
+          "Pact Magic Slots",
+          lvl >= 17 ? 4 : lvl >= 11 ? 3 : lvl >= 2 ? 2 : 1,
+          "short_rest",
+        ),
+      ];
 
     case "wizard":
       return [createResource("wizard-arcane-recovery", "Arcane Recovery", 1, "long_rest")];
